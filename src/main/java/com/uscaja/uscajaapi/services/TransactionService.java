@@ -7,17 +7,15 @@ import com.uscaja.uscajaapi.models.User;
 import com.uscaja.uscajaapi.repositories.BankAccountRepository;
 import com.uscaja.uscajaapi.repositories.TransactionRepository;
 import com.uscaja.uscajaapi.repositories.UserRepository;
+import com.uscaja.uscajaapi.utils.DateGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class TransactionService {
-    private static final List<String> transactionTypes = List.of("Transfer", "Top Up", "Withdrawal");
 
     @Autowired
     private TransactionRepository transactionRepo;
@@ -38,10 +36,7 @@ public class TransactionService {
             User involvedUser = transaction.getInvolvedUser();
             BankAccount sourceBankAccount = transaction.getSourceAccount();
 
-
             User dbInvolvedUser = findUserByDni(involvedUser.getDni());
-
-
             Optional<BankAccount> optionalValue = findBankAcountByNumber(sourceBankAccount.getAccountNumber());
             BankAccount dbSourceBankAccount;
 
@@ -57,6 +52,7 @@ public class TransactionService {
             }
 
             if (isOwner) {
+                transaction.setDate(DateGenerator.currentDate());
                 transactionRepo.save(transaction);
                 response.setMessage("Transaction created");
             } else {
