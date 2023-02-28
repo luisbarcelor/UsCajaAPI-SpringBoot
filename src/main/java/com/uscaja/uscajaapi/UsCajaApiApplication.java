@@ -9,5 +9,4 @@ public class UsCajaApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(UsCajaApiApplication.class, args);
 	}
-
 }
