@@ -1,5 +1,6 @@
 package com.uscaja.uscajaapi.models;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -7,6 +8,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties("bankAccounts")
 public class User {
 
     @Id
@@ -31,7 +33,7 @@ public class User {
     @Column(name = "email", nullable = false, length = 50)
     private String email;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "users")
     private Set<BankAccount> bankAccounts = new HashSet<>();
 
     public User() {}

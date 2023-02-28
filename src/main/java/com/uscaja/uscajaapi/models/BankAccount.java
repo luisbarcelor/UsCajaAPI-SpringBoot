@@ -1,11 +1,16 @@
 package com.uscaja.uscajaapi.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "bank_accounts")
+@JsonIgnoreProperties("users")
 public class BankAccount {
 
     @Id
@@ -18,7 +23,7 @@ public class BankAccount {
     @Column(name = "balance", nullable = false)
     private double balance = 0;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_bank_accounts",
             joinColumns = @JoinColumn(name = "bank_account", referencedColumnName = "account_number"),
@@ -26,9 +31,11 @@ public class BankAccount {
     private Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "sourceAccount")
+    @JsonIgnore
     private Set<Transaction> transactionsFrom = new HashSet<>();
 
     @OneToMany(mappedBy = "destinationAccount")
+    @JsonIgnore
     private Set<Transaction> transactionsTo = new HashSet<>();
 
     public BankAccount() {}
