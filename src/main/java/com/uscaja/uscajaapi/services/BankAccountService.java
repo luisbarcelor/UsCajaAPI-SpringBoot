@@ -2,6 +2,7 @@ package com.uscaja.uscajaapi.services;
 
 import com.uscaja.uscajaapi.models.BankAccount;
 import com.uscaja.uscajaapi.models.Message;
+import com.uscaja.uscajaapi.models.Transaction;
 import com.uscaja.uscajaapi.models.User;
 import com.uscaja.uscajaapi.repositories.BankAccountRepository;
 import com.uscaja.uscajaapi.repositories.UserRepository;
@@ -115,6 +116,30 @@ public class BankAccountService {
         }
 
         return response;
+    }
+
+    public Set<Transaction> listTransactionsFrom(int account) {
+        Set<Transaction> transactions = new HashSet<>();
+        Optional<BankAccount> optionalValue = findBankAcountByNumber(account);
+
+        if (optionalValue.isPresent()) {
+            BankAccount bankAccount = optionalValue.get();
+            transactions = bankAccount.getTransactionsFrom();
+        }
+
+        return transactions;
+    }
+
+    public Set<Transaction> listTransactionsTo(int account) {
+        Set<Transaction> transactions = new HashSet<>();
+        Optional<BankAccount> optionalValue = findBankAcountByNumber(account);
+
+        if (optionalValue.isPresent()) {
+            BankAccount bankAccount = optionalValue.get();
+            transactions = bankAccount.getTransactionsTo();
+        }
+
+        return transactions;
     }
 
     //External repos

@@ -18,7 +18,7 @@ public class Transaction {
     private String date;
 
     @Column(name = "amount", nullable = false)
-    private double amount;
+    private float amount;
 
     @ManyToOne
     @JoinColumn(name = "source_account", referencedColumnName = "account_number")
@@ -33,7 +33,7 @@ public class Transaction {
     private User involvedUser;
 
     public Transaction() {}
-    public Transaction(int transactionCode, String transactionType, String date, double amount, BankAccount sourceAccount, BankAccount destinationAccount, User involvedUser) {
+    public Transaction(int transactionCode, String transactionType, String date, float amount, BankAccount sourceAccount, BankAccount destinationAccount, User involvedUser) {
         this.transactionCode = transactionCode;
         this.transactionType = transactionType;
         this.date = date;
@@ -67,11 +67,11 @@ public class Transaction {
         this.date = date;
     }
 
-    public double getAmount() {
+    public float getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(float amount) {
         this.amount = amount;
     }
 

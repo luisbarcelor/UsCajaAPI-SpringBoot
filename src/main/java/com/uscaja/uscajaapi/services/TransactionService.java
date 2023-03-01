@@ -54,17 +54,21 @@ public class TransactionService {
             if (isOwner) {
                 transaction.setDate(DateGenerator.currentDate());
 
+                if (!transaction.getTransactionType().equals("Transfer")) {
+                    transaction.setDestinationAccount(null);
+                }
+
                 if (makeTransaction(transaction, dbSourceBankAccount)) {
                     transactionRepo.save(transaction);
                     response.setMessage("Transaction created");
                 } else {
                     response.setMessage("The source account may not have enough funds or the transaction type " +
-                            "is incorrect. Please mind that there are only 3 possible types -> 'Top Up', 'Transfer', " +
-                            "'Withdrawal' (case sensitive)");
+                            "is incorrect. Only 3 possible types ('Top Up', 'Transfer', 'Withdrawal'). If type is 'Transfer' " +
+                            "the accounts have to be different");
                 }
 
             } else {
-                response.setMessage("The user specified is not the owner of the account");
+                response.setMessage("The user specified is not an owner of the account");
             }
 
         } catch (Exception e) {
@@ -78,22 +82,30 @@ public class TransactionService {
 
     private boolean makeTransaction(Transaction transaction, BankAccount sourceBankAccount) {
         boolean isDone = false;
-        int destAccountNum = transaction.getDestinationAccount().getAccountNumber();
-        double amount = transaction.getAmount();
+        float amount = transaction.getAmount();
 
         if (typeList[0].equals(transaction.getTransactionType())) { //Transfer
+            boolean isSameAccounts = true;
+            int srcAccountNum = sourceBankAccount.getAccountNumber();
+            int destAccountNum = transaction.getDestinationAccount().getAccountNumber();
+
             if (findBankAcountByNumber(destAccountNum).isPresent()) {
                 BankAccount destAccount = findBankAcountByNumber(destAccountNum).get();
                 destAccount.addAmount(amount);
-                isDone = sourceBankAccount.withdrawAmount(amount);
+                boolean isWithdrawn = sourceBankAccount.withdrawAmount(amount);
 
-                bankRepo.save(destAccount);
-                bankRepo.save(sourceBankAccount);
+                if (srcAccountNum != destAccountNum) {
+                    bankRepo.save(destAccount);
+                    bankRepo.save(sourceBankAccount);
+                    isDone = isWithdrawn;
+                }
             }
         } else if (typeList[1].equals(transaction.getTransactionType())) { //Top Up
-
+            sourceBankAccount.addAmount(amount);
+            bankRepo.save(sourceBankAccount);
+            isDone = true;
         } else if (typeList[2].equals(transaction.getTransactionType())) { //Withdrawal
-
+            isDone = sourceBankAccount.withdrawAmount(amount);
         }
 
         return isDone;

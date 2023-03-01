@@ -2,6 +2,7 @@ package com.uscaja.uscajaapi.controllers;
 
 import com.uscaja.uscajaapi.models.BankAccount;
 import com.uscaja.uscajaapi.models.Message;
+import com.uscaja.uscajaapi.models.Transaction;
 import com.uscaja.uscajaapi.models.User;
 import com.uscaja.uscajaapi.services.BankAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,16 @@ public class BankAccountController {
     @GetMapping("/list/by-user/{dni}")
     public List<BankAccount> listUserSpecificBankAccounts(@PathVariable String dni) {
         return bankService.listBankAccountsByUser(dni);
+    }
+
+    @GetMapping("/list/transactions-from")
+    public Set<Transaction> listAccountTransactionsFrom(@RequestParam int account) {
+        return bankService.listTransactionsFrom(account);
+    }
+
+    @GetMapping("/list/transactions-to")
+    public Set<Transaction> listAccountTransactionsTo(@RequestParam int account) {
+        return bankService.listTransactionsTo(account);
     }
 
     @PostMapping("/create")
