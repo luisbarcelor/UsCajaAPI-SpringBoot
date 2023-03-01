@@ -1,10 +1,9 @@
 package com.uscaja.uscajaapi.models;
 
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +20,7 @@ public class BankAccount {
     private String creationDate;
 
     @Column(name = "balance", nullable = false)
-    private double balance = 0;
+    private float balance = 0;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -39,7 +38,7 @@ public class BankAccount {
     private Set<Transaction> transactionsTo = new HashSet<>();
 
     public BankAccount() {}
-    public BankAccount(int accountNumber, String creationDate, double balance, Set<User> users, Set<Transaction> transactionsFrom, Set<Transaction> transactionsTo) {
+    public BankAccount(int accountNumber, String creationDate, float balance, Set<User> users, Set<Transaction> transactionsFrom, Set<Transaction> transactionsTo) {
         this.accountNumber = accountNumber;
         this.creationDate = creationDate;
         this.balance = balance;
@@ -64,11 +63,11 @@ public class BankAccount {
         this.creationDate = creationDate;
     }
 
-    public double getBalance() {
+    public float getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(float balance) {
         this.balance = balance;
     }
 
@@ -96,11 +95,11 @@ public class BankAccount {
         this.transactionsTo = transactionsTo;
     }
 
-    public void addAmount(double amount) {
+    public void addAmount(float amount) {
         balance += amount;
     }
 
-    public boolean withdrawAmount(double amount) {
+    public boolean withdrawAmount(float amount) {
         boolean enoughFunds = false;
 
         if (balance > 0 && balance > amount) {
