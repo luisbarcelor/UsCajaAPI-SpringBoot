@@ -95,4 +95,19 @@ public class BankAccount {
     public void setTransactionsTo(Set<Transaction> transactionsTo) {
         this.transactionsTo = transactionsTo;
     }
+
+    public void addAmount(double amount) {
+        balance += amount;
+    }
+
+    public boolean withdrawAmount(double amount) {
+        boolean enoughFunds = false;
+
+        if (balance > 0 && balance > amount) {
+            balance -= amount;
+            enoughFunds = true;
+        }
+
+        return enoughFunds;
+    }
 }
