@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/bank-accounts")
+@RequestMapping("/api/bank-accounts")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class BankAccountController {
     @Autowired
     public BankAccountService bankService;

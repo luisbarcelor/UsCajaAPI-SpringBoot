@@ -13,11 +13,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepo;
 
-    public String addUser(User user) {
-        userRepo.save(user);
-        return "User has been saved successfully";
-    }
-
     public Iterable<User> listUsers() {
         return userRepo.findAll();
     }
@@ -35,8 +30,8 @@ public class UserService {
             userRepo.save(dbUser);
 
             response.setMessage("The user has been updated");
-        } catch (IndexOutOfBoundsException ie) {
-            response.setMessage("The user requested for the update does not exist");
+        } catch (Exception e) {
+            response.setMessage("Invalid data");
         }
 
         return response;
@@ -47,7 +42,7 @@ public class UserService {
         return new Message("The user has been deleted");
     }
 
-    private User findUserByDni(String dni) {
+    public User findUserByDni(String dni) {
         List<User> userList = userRepo.findUserByDni(dni);
         return userList.get(0);
     }

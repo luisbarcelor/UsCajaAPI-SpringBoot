@@ -85,7 +85,6 @@ public class TransactionService {
         float amount = transaction.getAmount();
 
         if (typeList[0].equals(transaction.getTransactionType())) { //Transfer
-            boolean isSameAccounts = true;
             int srcAccountNum = sourceBankAccount.getAccountNumber();
             int destAccountNum = transaction.getDestinationAccount().getAccountNumber();
 

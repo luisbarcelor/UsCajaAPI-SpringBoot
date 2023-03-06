@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
     @Autowired
     private UserService service;
@@ -21,10 +23,9 @@ public class UserController {
         return service.listUsers();
     }
 
-    @PostMapping("/add")
-    public Message addUser(@RequestBody User user) {
-        String response = service.addUser(user);
-        return new Message(response);
+    @GetMapping("/get")
+    public User getUserByDni(@RequestParam(name = "dni", defaultValue = "none") String dni) {
+        return service.findUserByDni(dni);
     }
 
     @DeleteMapping("/delete/{dni}")

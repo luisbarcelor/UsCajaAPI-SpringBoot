@@ -73,16 +73,20 @@ public class BankAccountService {
     public Message deleteUserFromAccount(String dni, int account) {
         Message response = new Message();
 
-        try {
-            BankAccount dbBankAccount = findBankAcountByNumber(account).get();
-            User dbUser = findUserByDni(dni);
-            Set<User> users = dbBankAccount.getUsers();
-            users.remove(dbUser);
+        if (listAccountOwners(account).size() != 1) {
+            try {
+                BankAccount dbBankAccount = findBankAcountByNumber(account).get();
+                User dbUser = findUserByDni(dni);
+                Set<User> users = dbBankAccount.getUsers();
+                users.remove(dbUser);
 
-            bankRepo.save(dbBankAccount);
-            response.setMessage("User ownership removed from the account");
-        } catch (Exception e) {
-            response.setMessage("The account number or user provided do not exist");
+                bankRepo.save(dbBankAccount);
+                response.setMessage("User ownership removed from the account");
+            } catch (Exception e) {
+                response.setMessage("The account number or user provided does not exist");
+            }
+        } else {
+            response.setMessage("A bank account must have at least one owner");
         }
 
         return response;
@@ -98,7 +102,7 @@ public class BankAccountService {
             users.add(dbUser);
 
             bankRepo.save(dbBankAccount);
-            response.setMessage("Added user to the account");
+            response.setMessage("Successfully added user to the account");
         } catch (Exception e) {
             response.setMessage("The account number or user provided do not exist");
         }

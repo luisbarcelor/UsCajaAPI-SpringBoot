@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/transactions")
+@RequestMapping("/api/transactions")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class TransactionController {
     @Autowired
     private TransactionService service;
